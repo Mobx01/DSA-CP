@@ -1,0 +1,44 @@
+/* Intuition
+we count the frequency of characters in t and then subtract the frequencies using s, the remaining character with count 1 must be the extra character.
+
+Approach
+Create an unordered_map<char, int> which store character frequencies.
+
+Traverse string t and increment the count of each character.
+{ so every character is stored with its frequency as value. eg a -> 5 . }
+
+Traverse string s and decrement the count of each character.
+{all common characters cancel out, leaving only the extra character}
+
+Traverse string t again and find the character whose count is 1.
+
+Return that character as the answer.
+
+Complexity
+Time complexity:
+O(n) (where n is the length of the string)
+
+Space complexity:
+O(1) (at most 26 lowercase English letters are stored in the map) */
+
+class Solution {
+public:
+    char findTheDifference(string s, string t) {
+        unordered_map<char, int> con;
+
+        for (char c : t) {
+            con[c]++;
+        }
+
+        for (char c : s) {
+            con[c]--;
+        }
+
+        for (char c : t) {
+            if (con[c] == 1)
+                return c;
+        }
+
+        return '\0'; 
+    }
+};
