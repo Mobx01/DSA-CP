@@ -41,3 +41,21 @@ public:
 
 
 /*Optimal solution*/
+/* few thing for approach :- shift the res by number of current digit of num so we can perfectly append it . increase size of digit onyl when encounter number in 2^n format(2,4,8...)
+  use num & num -1 for checking 2^n . 
+  */
+class Solution {
+public:
+    int concatenatedBinary(int n) {
+        long res = 0, digit =0; 
+        int u =  1e9 + 7;
+        for(int num = 1 ; num <= n ;num++){
+            if((num & (num-1)) == 0 )
+            digit ++ ;
+
+            res = ((res << digit)% u + num)% u;
+        }
+        return res;
+
+    }
+};
