@@ -31,6 +31,7 @@ public:
             return;
         }
         for(char ch = 'a';ch<='c';ch++){
+            if(!result.empty()) return; //exit if already found the k-th string
             if(!curr.empty() && curr.back() == ch) continue;
 
             // general backtracking templete 
