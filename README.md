@@ -5,8 +5,7 @@ This repository contains my solutions to Data Structures & Algorithms (DSA) and 
 
 The goal of this repository is to build strong problem-solving skills, improve algorithmic thinking, and maintain a well-structured reference for future revision and interviews.
 
-
-**Platforms Covered **
+**Platforms Covered**
 
 Problems are taken from the following platforms:
 
