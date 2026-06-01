@@ -6,6 +6,31 @@ Given a 0-indexed integer array cost, where cost[i] denotes the cost of the ith 
 
 */
 
+/*
+ * APPROACH: "Buy 2, Get 1 Free" Strategy
+ * 
+ * To save the most money, you want your FREE candies to be the most 
+ * expensive ones possible. The store rule usually says the free item 
+ * must be cheaper or equal to the ones you bought.
+ * 
+ * 1. Sort the Candies:
+ *    First, we use `sort()` to organize the candy prices in ascending 
+ *    order (cheapest at the start, most expensive at the end).
+ * 
+ * 2. Start from the Most Expensive (Loop Backwards):
+ *    To get the biggest freebies, we need to buy the most expensive 
+ *    candies first. We do this by looping backwards from the end of 
+ *    the array (i = n - 1 down to 0).
+ * 
+ * 3. Use a Tracker to Count to 3:
+ *    We use a `tracker` variable to count our group of 3 candies.
+ *    - Candy 1 (tracker = 1): We buy it. Add its price to mincost.
+ *    - Candy 2 (tracker = 2): We buy it. Add its price to mincost.
+ *    - Candy 3 (tracker = 3): This is our FREE candy! Because of our 
+ *      loop, this is the 3rd most expensive candy in our current group. 
+ *      We skip adding its cost, and reset the tracker back to 1.
+ */
+
 class Solution {
 public:
     int minimumCost(vector<int>& cost) {
