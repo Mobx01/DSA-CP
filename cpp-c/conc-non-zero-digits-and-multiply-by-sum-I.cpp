@@ -4,38 +4,19 @@ Form a new integer x by concatenating all the non-zero digits of n in their orig
 Let sum be the sum of digits in x.
 Return an integer representing the value of x * sum.*/
 
-/* Approach - String Parsing & Math (Time: O(D), Space: O(D)) where D is the number of digits in n
- * Basically, we extract all the non-zero digits to simultaneously build our new number 'x' and calculate the total digit sum.
+
+/* Approach - Pure Mathematical Digit Extraction (Time: O(D^2), Space: O(1)) 
+ * Basically, we reconstruct the number 'x' mathematically from right to left by extracting the last digit of 'n' using modulo, and prepending it to 'x' by shifting it into the correct decimal place based on 'x's current length.
  * * Observation: 
- * - Zeros contribute absolutely nothing to the final concatenated value of 'x', nor do they add any value to the digit 'sum'.
- * - Converting the integer to a string allows us to easily isolate and concatenate the non-zero digits while preserving their exact original order from left to right.
+ * - Instead of converting to strings, we can isolate the rightmost digit using 'n % 10' and strip it away using 'n / 10'.
+ * - Because we are reading 'n' from right-to-left, we must *prepend* valid digits to our newly forming number 'x' to preserve their original order. We achieve this by multiplying the extracted digit by 10 raised to the power of 'x's current length, effectively pushing the new digit to the absolute front.
+ * - Zeros contribute nothing to addition, so we can just blindly add 'n % 10' to our 'sum' every iteration without even needing an if-statement for it.
  * * How it runs:
- * First, we convert the given integer 'n' into a string to easily iterate through its individual characters. We also initialize an empty string 'x_str' to build our new number and an integer 'sum' to zero.
- * Then, we loop through every character in the string. If the character is NOT '0', we append it to 'x_str' and mathematically add its true integer value (char - '0') to our running 'sum'.
- * Finally, we check if 'x_str' is empty (which happens if 'n' was 0 or contained only zeros). If it is, we return 0. Otherwise, we convert 'x_str' back into an integer (using long long to prevent overflow) and return the product of 'x' and 'sum'!
+ * First, we initialize our 'sum' and 'x' to 0, and start a while loop that chops down 'n' until it hits 0.
+ * Then, for each iteration, we check if the current last digit ('n % 10') is non-zero. If it is, we call our helper function 'xlen' to see how many digits 'x' currently has, multiply our extracted digit by 10^length to position it correctly, and add the existing 'x' to it.
+ * Finally, we add the extracted digit to our running 'sum' and divide 'n' by 10 to move to the next digit. Once the loop ends, we return 'x * sum'!
  */
-class Solution {
-public:
-    long long concatenateAndMultiply(int n) {
-        string s = to_string(n);
-        string x_str = "";
-        long long sum = 0;
-        
-        for (char c : s) {
-            if (c != '0') {
-                x_str += c;
-                sum += (c - '0');
-            }
-        }
-        
-        if (x_str.empty()) {
-            return 0;
-        }
-        
-        long long x = stoll(x_str);
-        return x * sum;
-    }
-};
+
 
 class Solution {
 public:
