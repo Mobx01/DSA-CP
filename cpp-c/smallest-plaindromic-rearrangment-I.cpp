@@ -48,3 +48,51 @@ public:
         return s;
     }
 };
+
+
+
+
+/* Approach - Prefix Extraction & Sorting (Time: O(N log N), Space: O(N))
+ * Basically, we extract strictly the first half of the string, sort it alphabetically to make it as small as possible, and then perfectly mirror it to manually construct our palindrome!
+ * * Observation: 
+ * - By physically copying and reversing the first half, the code guarantees absolute structural symmetry, mathematically forcing the output to be a valid palindrome.
+ * - Using C++'s built-in `sort()` on the prefix instantly pushes the lexicographically smallest characters to the absolute front.
+ * - (Bug Alert: This approach completely destroys the original character frequencies! If the problem requires you to rearrange the *existing* characters of the string to form a palindrome, this code will catastrophically fail because it completely abandons the entire second half of the input string and artificially clones the first half. It also leaves the original middle character entirely untouched, which might prevent the true smallest palindrome from forming!)
+ * * How it runs:
+ * First, we safely check our extreme base case: if the string length 'n' is 1 or less, it is already a perfect palindrome by default, so we instantly return 's'.
+ * Then, if the length is mathematically odd, we securely lock in the exact `middle` character of the original string. We sweep through the first `n / 2` characters and aggressively copy them directly into our `ans` string.
+ * Next, we trigger `sort()` to flawlessly arrange our newly extracted prefix in strictly ascending alphabetical order, and save a pristine copy of it as `first_half`.
+ * Finally, we perfectly reconstruct the string: we append our isolated `middle` character to `ans` (if the length was odd), create a `rev` copy of our `first_half`, flip it backwards using `reverse()`, and physically stitch it onto the absolute back. We confidently return our artificially forged palindrome!
+ */
+
+
+
+
+class Solution {
+public:
+    string smallestPalindrome(string s) {
+        int n = s.length();
+        if(n <= 1) return s; 
+        
+        char middle;
+        string ans = "";
+        if(n % 2 == 1) middle = s[n / 2]; 
+        
+        for(int i = 0 ; i < n / 2; i++){
+            ans.push_back(s[i]); 
+        }
+        sort(ans.begin(), ans.end()); 
+
+        string first_half = ans; 
+        
+        if(n % 2 == 1){
+            ans.push_back(middle);
+        }
+        string rev = first_half; 
+        reverse(rev.begin(), rev.end());
+        
+        ans += rev;
+        
+        return ans;
+    }
+};
