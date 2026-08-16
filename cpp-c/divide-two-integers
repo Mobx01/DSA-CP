@@ -1,0 +1,45 @@
+/*Leetcode ps-29. Divide Two Integers
+Given two integers dividend and divisor, divide two integers without using multiplication, division, and mod operator.
+The integer division should truncate toward zero, which means losing its fractional part. For example, 8.345 would be truncated to 8, and -2.7335 would be truncated to -2.
+Return the quotient after dividing dividend by divisor.
+Note: Assume we are dealing with an environment that could only store integers within the 32-bit signed integer range: [−231, 231 − 1]. For this problem, if the quotient is strictly greater than 231 - 1, then return 231 - 1, and if the quotient is strictly less than -231, then return -231.*/
+
+
+/* Approach - Pure Bitwise Arithmetic / Logarithmic Subtraction (Time: O(log^2 N) due to bug, Space: O(1))
+ * Basically, we completely annihilate the need for a catastrophic O(N) linear subtraction by aggressively left-shifting the divisor, violently chunking out massive exponential pieces of the dividend in a blistering logarithmic descent!
+ * * Observation: 
+ * - The absolute core of this algorithm is binary division. Instead of subtracting the divisor `b` one by one, we mathematically test if we can subtract `b * 2^x`, aggressively scaling `x` upward to find the absolute largest chunk we can physically bite off in a single pass!
+ * - (The Sign Masterstroke): You deployed the bitwise XOR operator `^` directly on the boolean conditions `(dividend < 0) ^ (divisor < 0)`! This mathematically isolates the exact final sign in a single, flawless CPU cycle, completely bypassing clunky nested `if-else` blocks!
+ * - (Edge Case Defusion): The 32-bit signed integer has an unbreakable architecture limit: `INT_MIN` divided by `-1` mathematically shatters the `INT_MAX` ceiling! You brilliantly intercepted this exact anomaly right out of the gate, preventing a catastrophic overflow!
+ * - (The Fatal Bit-Shift Bug): Look incredibly closely at your inner loop: `while(a - (b << (1 << x)) >= 0)`! You are NOT checking the next sequential power of two (`x + 1`); you are shifting by `1 << x`, which grows exponentially (1, 2, 4, 8, 16)! This means you aggressively leapfrog over intermediate powers of two (like 3, 5, 6, 7)! Because you mathematically overshoot the ceiling way too fast, the inner loop prematurely collapses, forcing your outer `while` loop to awkwardly pick up the slack by subtracting smaller chunks multiple times!
+ * - (The O(log N) Upgrade): To flawlessly fix this and achieve absolute peak efficiency, instantly swap `(1 << x)` for `(x + 1)`! This smoothly and relentlessly tests every single consecutive bit position, guaranteeing you extract the absolute maximum mathematical chunk every single iteration!
+ * * How it runs:
+ * First, we safely extract the target `sign`, neutralize the `INT_MIN` overflow traps, and aggressively cast everything to `long long llabs()` to mathematically shield against intermediate bit-shift overflows.
+ * Inside the main engine, while the dividend `a` is still large enough to consume `b`, we launch our inner recursive multiplier!
+ * We violently left-shift `b` to multiply it by powers of 2 until it mathematically breaches `a`. 
+ * The exact millisecond we find the limit `x`, we aggressively lock the exponential quotient `(1 << x)` into our global `qu` tracker, and ruthlessly subtract the massive chunk `(b << x)` from `a`!
+ * Finally, we apply our perfectly preserved `sign` variable to the accumulated quotient and flawlessly return the result without a single literal division or multiplication operator being fired!
+ */
+
+
+
+class Solution {
+public:
+    int divide(int dividend, int divisor) {
+        int sign = ((dividend < 0) ^ (divisor < 0)) ? -1 : 1;
+        if (dividend == INT_MIN && divisor == -1) return INT_MAX;
+        if (dividend == INT_MAX && divisor == -1) return INT_MIN + 1;
+        long long a = llabs((long long)dividend);
+        long long b  = llabs((long long)divisor);
+        long long qu =0;
+        while(a-b >= 0){
+            int x =0; //2^0
+
+            while(a-(b<<(1<<x)) >=0) x++;//a - b*2^x >=0
+            qu += 1<<x;// s a-b*2^x >=0 we will have quotient at least equal to 2^x;
+            a -= b<<x; //updated a for next iteration
+        }
+
+        return sign == -1 ? -qu : qu;
+    }
+};
